@@ -13,14 +13,17 @@ import torch.nn as nn
 import torch.nn.functional as F
 
 
-class PAN17ConvNet(nn.Module):
+class HPConvNet(nn.Module):
+    """
+    HomePod Convolutional Neural Network model.
+    """
 
     # Constructor
     def __init__(self, n_classes=2, params=(4800, 400)):
         """
         Constructor
         """
-        super(PAN17ConvNet, self).__init__()
+        super(HPConvNet, self).__init__()
 
         # 2D convolution layer, 1 in channel, 10 out channels (filters), kernel size 5
         self.conv1 = nn.Conv2d(1, 10, kernel_size=5, stride=1)
@@ -54,7 +57,7 @@ class PAN17ConvNet(nn.Module):
         x = F.relu(F.max_pool2d(self.conv2_drop(self.conv2(x)), 2))
 
         # Put all 320 features into 1D line << x
-        x = x.view(-1, PAN17ConvNet.num_flat_features(x))
+        x = x.view(-1, HPConvNet.num_flat_features(x))
 
         # ReLU << Linear model on 4800 features to 50 outputs << x
         x = F.relu(self.fc1(x))
@@ -84,4 +87,4 @@ class PAN17ConvNet(nn.Module):
         return num_features
     # end num_flat_features
 
-# end PAN17ConvNet
+# end HPConvNet
